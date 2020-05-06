@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: 30,
-    // opacity: 0.3,
   },
   text: {
     fontSize: 14,
