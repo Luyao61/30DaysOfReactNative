@@ -1,4 +1,4 @@
-export interface IAppMetadata {
+export interface IAppConfig {
   id: string;
   name: string;
   color?: string;
