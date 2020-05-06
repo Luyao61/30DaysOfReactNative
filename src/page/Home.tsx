@@ -2,19 +2,14 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { ReactNavigationScreenProps } from "../typing/ReactNavigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { AppList } from "./AppList";
 
 interface HomeScreenProps extends ReactNavigationScreenProps {}
 
 export function HomePage({ navigation }: HomeScreenProps) {
   return (
     <View style={styles.container}>
-      <Text>Hello World!</Text>
-      <TouchableOpacity
-        style={styles.touchableHighlights}
-        onPress={() => navigation.navigate("Details")}
-      >
-        <Text style={styles.text}>Go to Details</Text>
-      </TouchableOpacity>
+      <AppList />
     </View>
   );
 }
