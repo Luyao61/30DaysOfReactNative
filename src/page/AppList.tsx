@@ -14,7 +14,7 @@ export function AppList() {
   React.useEffect(setInitialBacthOfApp(pullCounter, setAppData), []);
   const onRefresh = React.useCallback(() => {
     refreshAppData(pullCounter, setPullCounter, setRefreshing, setAppData);
-  }, []);
+  }, [pullCounter]);
   return (
     <FlatList
       data={appData}
