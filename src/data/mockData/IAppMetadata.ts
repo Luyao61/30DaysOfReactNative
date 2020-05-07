@@ -3,5 +3,6 @@ export interface IAppConfig {
   name: string;
   color?: string;
   icon?: string;
+  route: string;
   //...
 }
