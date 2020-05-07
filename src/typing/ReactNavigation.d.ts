@@ -6,7 +6,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
  */
 export type RootStackParamList = {
   Home: undefined;
-  Details: undefined;
+  BlankPage: undefined;
+  Day1: undefined;
   // Feed: { sort: "latest" | "top" } | undefined;
 };
 
