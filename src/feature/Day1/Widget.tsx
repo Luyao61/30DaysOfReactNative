@@ -1,22 +1,46 @@
 import React from "react";
 import {
-  StyleSheet,
-  View,
   Image,
   TouchableHighlight,
   Alert,
+  ImageSourcePropType,
 } from "react-native";
 
-export function Widget() {
+interface WidgetProps {
+  positionX: number;
+  positionY: number;
+  height: number;
+  width: number;
+  borderRadius: number;
+  backgroundColor: string;
+  image: ImageSourcePropType;
+}
+
+export const Widget = ({
+  positionX,
+  positionY,
+  image,
+  ...styleProps
+}: WidgetProps) => {
   return (
-    <TouchableHighlight style={styles.widget} onPress={onWidgetPressed}>
+    <TouchableHighlight
+      style={[
+        styleProps,
+        // {
+        //   position: "absolute",
+        //   top: positionY - styleProps.height / 2,
+        //   left: positionX - styleProps.width / 2,
+        // },
+      ]}
+      onPress={onWidgetPressed}
+    >
       <Image
-        style={styles.tinyLogo}
-        source={require("../../../assets/react.png")}
+        style={{ width: styleProps.width, height: styleProps.height }}
+        source={image}
       />
     </TouchableHighlight>
   );
-}
+};
 
 const onWidgetPressed = () => {
   Alert.alert("Draggable Widget", "Please drag me, do not press me.", [
@@ -25,16 +49,3 @@ const onWidgetPressed = () => {
     },
   ]);
 };
-
-const styles = StyleSheet.create({
-  widget: {
-    width: 80,
-    height: 80,
-    backgroundColor: "#000000",
-    borderRadius: 40,
-  },
-  tinyLogo: {
-    width: 80,
-    height: 80,
-  },
-});
