@@ -1,12 +1,50 @@
 import React from "react";
-import { View, PanResponder, Animated } from "react-native";
+import { View, PanResponder, Animated, Dimensions } from "react-native";
+import { useSafeArea, EdgeInsets } from "react-native-safe-area-context";
 
 interface DraggableProps {
+  positionX: number;
+  positionY: number;
+  componentWidth: number;
+  componentHeight: number;
+  horizontalMarginFromEdge: number;
+  verticalMarginFromEdge: number;
   children: React.ReactElement;
 }
 
-export function Draggable({ children }: DraggableProps) {
-  const pan = React.useRef(new Animated.ValueXY()).current;
+export function Draggable({
+  positionX,
+  positionY,
+  children,
+  componentHeight,
+  componentWidth,
+  horizontalMarginFromEdge,
+  verticalMarginFromEdge,
+}: DraggableProps) {
+  const translateXY = React.useRef(new Animated.ValueXY()).current;
+  const safeAreaInsert = useSafeArea();
+  const screenWidth = Dimensions.get("screen").width;
+  const screenHeight = Dimensions.get("screen").height;
+  const presetCoordinates = React.useMemo(() => {
+    return calculatePresetCoordinates(
+      safeAreaInsert,
+      componentWidth,
+      componentHeight,
+      screenWidth,
+      screenHeight,
+      horizontalMarginFromEdge,
+      verticalMarginFromEdge
+    );
+  }, [
+    screenWidth,
+    screenHeight,
+    componentHeight,
+    componentWidth,
+    horizontalMarginFromEdge,
+    verticalMarginFromEdge,
+    safeAreaInsert,
+  ]);
+
   const panResponder = React.useRef(
     PanResponder.create({
       // Ask to be the responder:
@@ -18,9 +56,9 @@ export function Draggable({ children }: DraggableProps) {
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
       onPanResponderGrant: (evt, gestureState) => {
-        pan.setOffset({
-          x: (pan.x as any)._value,
-          y: (pan.y as any)._value,
+        translateXY.setOffset({
+          x: (translateXY.x as any)._value,
+          y: (translateXY.y as any)._value,
         });
         // The gesture has started. Show visual feedback so the user knows
         // what is happening!
@@ -32,15 +70,31 @@ export function Draggable({ children }: DraggableProps) {
       onPanResponderMove: Animated.event([
         null,
         {
-          dx: pan.x,
-          dy: pan.y,
+          dx: translateXY.x,
+          dy: translateXY.y,
         },
       ]),
       onPanResponderTerminationRequest: (evt, gestureState) => true,
+      // The user has released all touches while this view is the
+      // responder. This typically means a gesture has succeeded
       onPanResponderRelease: (evt, gestureState) => {
-        pan.flattenOffset();
-        // The user has released all touches while this view is the
-        // responder. This typically means a gesture has succeeded
+        translateXY.flattenOffset();
+        const destX =
+          (translateXY.x as any)._value > 0
+            ? presetCoordinates.right
+            : presetCoordinates.left;
+        const moveDown = (translateXY.y as any)._value > 0;
+        const coordinateToCompare = moveDown
+          ? presetCoordinates.bottom
+          : presetCoordinates.top;
+        const destY =
+          (translateXY.x as any)._value >
+          Math.abs(coordinateToCompare - presetCoordinates.mid) / 2
+            ? coordinateToCompare
+            : presetCoordinates.mid;
+        Animated.spring(translateXY, {
+          toValue: { x: destX, y: destY },
+        }).start();
       },
       onPanResponderTerminate: (evt, gestureState) => {
         // Another component has become the responder, so this gesture
@@ -56,11 +110,48 @@ export function Draggable({ children }: DraggableProps) {
   return (
     <Animated.View
       style={{
-        transform: [{ translateX: pan.x }, { translateY: pan.y }],
+        transform: [
+          { translateX: translateXY.x },
+          { translateY: translateXY.y },
+        ],
       }}
       {...panResponder.panHandlers}
     >
       {children}
     </Animated.View>
   );
+}
+
+export type coordinates = {
+  left: number;
+  right: number;
+  top: number;
+  mid: number;
+  bottom: number;
+};
+export function calculatePresetCoordinates(
+  safeAreaInsert: EdgeInsets,
+  componentWidth: number,
+  componentHeight: number,
+  screenWidth: number,
+  screenHeight: number,
+  horizontalMarginFromEdge: number,
+  verticalMarginFromEdge: number
+): coordinates {
+  return {
+    left:
+      0 + safeAreaInsert.left + horizontalMarginFromEdge + componentWidth / 2,
+    right:
+      screenWidth -
+      safeAreaInsert.right -
+      horizontalMarginFromEdge -
+      componentWidth / 2,
+    top: 0 + safeAreaInsert.top + verticalMarginFromEdge + componentHeight / 2,
+    mid: 0 + safeAreaInsert.top + (screenHeight - safeAreaInsert.top) / 2,
+    bottom:
+      screenHeight -
+      safeAreaInsert.bottom -
+      verticalMarginFromEdge -
+      componentHeight / 2,
+  };
 }
