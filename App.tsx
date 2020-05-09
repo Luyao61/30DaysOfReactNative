@@ -18,7 +18,7 @@ export default function App() {
           <Stack.Screen
             name="Day1"
             component={Day1}
-            options={{ headerShown: false, gestureEnabled: false }}
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>
