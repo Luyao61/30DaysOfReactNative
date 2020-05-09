@@ -3,7 +3,6 @@ import { View, PanResponder, Animated, Dimensions } from "react-native";
 import { useSafeArea, EdgeInsets } from "react-native-safe-area-context";
 
 interface DraggableProps {
-  // center coordinates of the touchable component, not top and left
   positionX: number;
   positionY: number;
   componentWidth: number;
@@ -22,10 +21,6 @@ export function Draggable({
   horizontalMarginFromEdge,
   verticalMarginFromEdge,
 }: DraggableProps) {
-  const x = positionX;
-  const y = positionY;
-  console.log(x);
-  console.log(y);
   const translateXY = React.useRef(new Animated.ValueXY()).current;
   const safeAreaInsert = useSafeArea();
   const screenWidth = Dimensions.get("screen").width;
@@ -93,12 +88,12 @@ export function Draggable({
           ? presetCoordinates.bottom
           : presetCoordinates.top;
         const destY =
-          Math.abs((translateXY.y as any)._value) >
+          (translateXY.x as any)._value >
           Math.abs(coordinateToCompare - presetCoordinates.mid) / 2
             ? coordinateToCompare
             : presetCoordinates.mid;
         Animated.spring(translateXY, {
-          toValue: { x: destX - x, y: destY - y },
+          toValue: { x: destX, y: destY },
         }).start();
       },
       onPanResponderTerminate: (evt, gestureState) => {
@@ -115,9 +110,6 @@ export function Draggable({
   return (
     <Animated.View
       style={{
-        position: "absolute",
-        top: positionY - componentHeight / 2,
-        left: positionX - componentWidth / 2,
         transform: [
           { translateX: translateXY.x },
           { translateY: translateXY.y },
