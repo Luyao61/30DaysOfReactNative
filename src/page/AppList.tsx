@@ -3,7 +3,9 @@ import { FlatList } from "react-native-gesture-handler";
 import { AppIconProps, AppIcon } from "./AppIcon";
 import { IAppConfig } from "../data/mockData/IAppMetadata";
 import { RefreshControl } from "react-native";
-import { generateBacthOfApp, retrieveApps } from "../data/mockData/MockDataProvider";
+import { generateBacthOfApp } from "../data/mockData/MockDataProvider";
+
+const BATCH = 25;
 
 export function AppList() {
   const [appData, setAppData] = React.useState<IAppConfig[]>([]);
@@ -52,7 +54,11 @@ async function refreshAppData(
 ) {
   setRefresh(true);
   setCounter(counter + 1);
-  const loadAppPromise = retrieveApps(counter);
+  const loadAppPromise = new Promise<IAppConfig[]>((resolve, reject) => {
+    setTimeout(() => {
+      resolve(generateBacthOfApp(counter));
+    }, 5000);
+  });
   const apps = await loadAppPromise;
   setRefresh(false);
   setAppData(apps);
