@@ -13,7 +13,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 interface Day1Props extends ReactNavigationScreenProps {}
 export function Day1({ navigation }: Day1Props) {
   const inserts = useSafeArea();
-
   const componentHeight = 80;
   const componentWidth = 80;
   const horizontalMarginFromEdge = 20;
@@ -45,24 +44,6 @@ export function Day1({ navigation }: Day1Props) {
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
       <Text>Drag your component on this canvas</Text>
-      <Draggable
-        positionX={inserts.left + (inserts.right - inserts.left) / 2}
-        positionY={inserts.top + (inserts.bottom - inserts.top) / 2}
-        componentHeight={componentHeight}
-        componentWidth={componentWidth}
-        horizontalMarginFromEdge={horizontalMarginFromEdge}
-        verticalMarginFromEdge={verticalMarginFromEdge}
-      >
-        <Widget
-          positionX={inserts.left + (inserts.right - inserts.left) / 2}
-          positionY={inserts.top + (inserts.bottom - inserts.top) / 2}
-          height={componentHeight}
-          width={componentWidth}
-          backgroundColor={"black"}
-          borderRadius={40}
-          image={require("../../../assets/react.png")}
-        />
-      </Draggable>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{
@@ -73,6 +54,24 @@ export function Day1({ navigation }: Day1Props) {
       >
         <Text style={{ color: "#00b2ca" }}>Go Back</Text>
       </TouchableOpacity>
+      <Draggable
+        positionX={
+          0 + inserts.left + (screenWidth - inserts.right - inserts.left) / 2
+        }
+        positionY={0 + inserts.top + (screenHeight - inserts.bottom - inserts.top) / 2}
+        componentHeight={componentHeight}
+        componentWidth={componentWidth}
+        horizontalMarginFromEdge={horizontalMarginFromEdge}
+        verticalMarginFromEdge={verticalMarginFromEdge}
+      >
+        <Widget
+          height={componentHeight}
+          width={componentWidth}
+          backgroundColor={"black"}
+          borderRadius={40}
+          image={require("../../../assets/react.png")}
+        />
+      </Draggable>
       {canvasDebug(presetCoordinates)}
     </SafeAreaView>
   );
@@ -86,9 +85,10 @@ function canvasDebug(coordinates: coordinates) {
     coordinates.mid,
     coordinates.top,
   ];
-  return Array.from({ length: 20 }, (x, i) => i).map((index) => {
+  return Array.from({ length: 6 }, (x, i) => i).map((index) => {
     return (
       <View
+        key={`${index % 2}-${index % 3}`}
         style={{
           position: "absolute",
           width: 10,
