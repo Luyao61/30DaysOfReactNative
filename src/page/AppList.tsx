@@ -3,10 +3,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { AppIconProps, AppIcon } from "./AppIcon";
 import { IAppConfig } from "../data/mockData/IAppMetadata";
 import { RefreshControl } from "react-native";
-import {
-  generateBacthOfApp,
-  retrieveApps,
-} from "../data/mockData/MockDataProvider";
+import { generateBacthOfApp, retrieveApps } from "../data/mockData/MockDataProvider";
 
 export function AppList() {
   const [appData, setAppData] = React.useState<IAppConfig[]>([]);
@@ -34,7 +31,6 @@ const renderAppIcon = ({ item }: { item: IAppConfig }) => {
     id: item.id,
     name: item.name,
     color: item.color,
-    route: item.route,
   };
   return <AppIcon {...appIconProps}></AppIcon>;
 };

@@ -3,17 +3,17 @@ import { View, Text, StyleSheet } from "react-native";
 import { ReactNavigationScreenProps } from "../typing/ReactNavigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-interface BlankPageProps extends ReactNavigationScreenProps {}
+interface DetailsScreenProps extends ReactNavigationScreenProps {}
 
-export function BlankPage({ navigation }: BlankPageProps) {
+export function DetailsPage({ navigation }: ReactNavigationScreenProps) {
   return (
-    <View style={styles.container}>
+    <View>
+      <Text>More Details</Text>
       <TouchableOpacity
         style={styles.touchableHighlights}
-        onPress={() => navigation.push("BlankPage")}
+        onPress={() => navigation.push("Details")}
       >
-        <Text style={styles.text}>Coming soon!</Text>
-        <Text style={styles.text}>This is a default page.</Text>
+        <Text style={styles.text}>Go to Details again!</Text>
       </TouchableOpacity>
     </View>
   );
@@ -29,6 +29,8 @@ const styles = StyleSheet.create({
   touchableHighlights: {
     alignItems: "center",
     justifyContent: "center",
+    height: 30,
+    // opacity: 0.3,
   },
   text: {
     fontSize: 14,

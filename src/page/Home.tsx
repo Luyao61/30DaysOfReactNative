@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { ReactNavigationScreenProps } from "../typing/ReactNavigation";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { AppList } from "./AppList";
 
 interface HomeScreenProps extends ReactNavigationScreenProps {}
