@@ -7,6 +7,8 @@ import {
 } from "react-native";
 
 interface WidgetProps {
+  positionX: number;
+  positionY: number;
   height: number;
   width: number;
   borderRadius: number;
@@ -15,6 +17,8 @@ interface WidgetProps {
 }
 
 export const Widget = ({
+  positionX,
+  positionY,
   image,
   ...styleProps
 }: WidgetProps) => {
@@ -22,6 +26,11 @@ export const Widget = ({
     <TouchableHighlight
       style={[
         styleProps,
+        // {
+        //   position: "absolute",
+        //   top: positionY - styleProps.height / 2,
+        //   left: positionX - styleProps.width / 2,
+        // },
       ]}
       onPress={onWidgetPressed}
     >
