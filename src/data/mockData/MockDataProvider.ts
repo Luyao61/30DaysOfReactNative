@@ -12,11 +12,3 @@ export const generateBacthOfApp = (counter: number) => {
   }
   return batchOfApps;
 };
-
-export const retrieveApps = (counter: number) => {
-  return new Promise<IAppConfig[]>((resolve, reject) => {
-    setTimeout(() => {
-      resolve(generateBacthOfApp(counter));
-    }, 5000);
-  });
-};
